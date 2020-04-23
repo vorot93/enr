@@ -190,13 +190,16 @@
 //! [`get`]: struct.Enr.html#method.get
 
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
-#![allow(clippy::missing_errors_doc, clippy::module_name_repetitions)]
+#![allow(
+    clippy::wildcard_imports,
+    clippy::missing_errors_doc,
+    clippy::module_name_repetitions
+)]
 
 mod builder;
 mod keys;
 mod node_id;
 
-use base64;
 use log::debug;
 use rlp::{DecoderError, Rlp, RlpStream};
 use std::collections::BTreeMap;
@@ -1027,7 +1030,7 @@ mod tests {
         dbg!("here2");
         assert_eq!(pubkey, expected_pubkey);
         dbg!("here3");
-        assert_eq!(enr.node_id().raw().to_vec(), expected_node_id);
+        assert_eq!(enr.node_id().raw().0.to_vec(), expected_node_id);
 
         assert!(enr.verify());
     }
