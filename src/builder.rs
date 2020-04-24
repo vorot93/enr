@@ -1,4 +1,4 @@
-use crate::{Enr, EnrError, EnrKey, EnrPublicKey, NodeId, MAX_ENR_SIZE};
+use crate::{Enr, EnrError, EnrKey, EnrPublicKey, MAX_ENR_SIZE};
 use rlp::RlpStream;
 use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr};
 
@@ -149,7 +149,7 @@ impl<K: EnrKey> EnrBuilder<K> {
 
         Ok(Enr {
             seq: self.seq,
-            node_id: NodeId::from(key.public()),
+            node_id: key.public().to_node_id(),
             content: self.content.clone(),
             signature,
             phantom: PhantomData,

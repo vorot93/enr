@@ -503,7 +503,7 @@ impl<K: EnrKey> Enr<K> {
         self.sign(key)?;
 
         // update the node id
-        self.node_id = NodeId::from(key.public());
+        self.node_id = key.public().to_node_id();
 
         // check the size of the record
         if self.size() > MAX_ENR_SIZE {
@@ -562,7 +562,7 @@ impl<K: EnrKey> Enr<K> {
         self.sign(enr_key)?;
 
         // update the node id
-        self.node_id = NodeId::from(enr_key.public());
+        self.node_id = enr_key.public().to_node_id();
 
         if self.size() > MAX_ENR_SIZE {
             // incase the signature size changes, inform the user the size has exceeded the maximum
@@ -733,7 +733,7 @@ impl<K: EnrKey> Enr<K> {
         self.sign(key)?;
 
         // update the node id
-        self.node_id = NodeId::from(key.public());
+        self.node_id = key.public().to_node_id();
 
         Ok(())
     }
@@ -929,7 +929,7 @@ impl<K: EnrKey> rlp::Decodable for Enr<K> {
         let public_key = K::enr_to_public(&content)?;
 
         // calculate the node id
-        let node_id = NodeId::from(public_key);
+        let node_id = public_key.to_node_id();
 
         let enr = Self {
             seq,
@@ -1030,7 +1030,7 @@ mod tests {
         dbg!("here2");
         assert_eq!(pubkey, expected_pubkey);
         dbg!("here3");
-        assert_eq!(enr.node_id().raw().0.to_vec(), expected_node_id);
+        assert_eq!(enr.node_id().0.to_vec(), expected_node_id);
 
         assert!(enr.verify());
     }

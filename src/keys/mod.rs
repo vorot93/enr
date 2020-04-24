@@ -28,6 +28,7 @@ use libp2p_core::PeerId;
 #[cfg(any(feature = "libsecp256k1", doc))]
 pub use secp256k1;
 
+use crate::{digest, node_id::NodeId};
 use rlp::DecoderError;
 use std::{
     collections::BTreeMap,
@@ -69,6 +70,12 @@ pub trait EnrPublicKey {
     /// Returns the ENR key identifier for the public key type. For `secp256k1` keys this
     /// is `secp256k1`.
     fn enr_key(&self) -> String;
+
+    /// Converts an `EnrPublicKey` into a `NodeId`.
+    fn to_node_id(&self) -> NodeId {
+        let pubkey_bytes = self.encode_uncompressed();
+        NodeId::from(&digest(&pubkey_bytes))
+    }
 
     #[cfg(any(feature = "libp2p", doc))]
     /// Converts an `EnrPublicKey` into a libp2p `PeerId`
